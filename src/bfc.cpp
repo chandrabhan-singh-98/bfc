@@ -150,6 +150,7 @@ int main(int argc,char **argv)
             if ( option == 'h' )
             {
                     bfc::print_usage();
+                    break;
             }
             else if ( option == 'f' )
             {
@@ -165,6 +166,7 @@ int main(int argc,char **argv)
                     while ( std::getline(ifile,line) )
                         buffer += line;
                 }
+                break;
             }
             else
             {
@@ -173,7 +175,7 @@ int main(int argc,char **argv)
                 break;
             }
         }
-        if ( optind < argc  && (! opt_flag ) )
+        if ( optind < argc  &&  opt_flag  )
         {
             std::cerr << argv[0] << " : Unrecognized option" << std::endl;
             bfc::print_usage();
