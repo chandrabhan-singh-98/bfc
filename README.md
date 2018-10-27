@@ -18,5 +18,15 @@ cd bfc
 make && make install
 ```
 
+## Usage
+```
+Usage
+    -f <file>   :   Read input from file
+    -h          :   Show help/usage guide
+```
+Calling `bfc` with no arguments will lead to reading input directly
+from STDIN.
+
+
 ## Bugs
 * Nested looping still doesn't work
