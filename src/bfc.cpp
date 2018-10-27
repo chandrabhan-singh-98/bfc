@@ -133,6 +133,7 @@ int main(int argc,char **argv)
     int option;
     std::ifstream ifile;
     bfc::init(argv[0]);
+    bool opt_flag = false;
     if ( argc == 1 )
     {
         /* if no args
@@ -145,34 +146,36 @@ int main(int argc,char **argv)
     {
         while ( (option = getopt(argc,argv,"hf:") ) != -1 )
         {
-            switch (option)
+            
+            if ( option == 'h' )
             {
-                case 'h':
                     bfc::print_usage();
-                    break;
-                case 'f':
-                    filename.assign(optarg);
-                    if ( ! fs::exists(filename) )
-                    {
-                        std::cerr << argv[0] << " : File not found - " << filename << std::endl;
-                        return bfc::file_error;
-                    }
-                    else
-                    {
-                        ifile.open(filename);
-                        while ( std::getline(ifile,line) )
-                            buffer += line;
-                    }
-                    break;
-                default:
-                    bfc::print_usage();
-                    break;
+            }
+            else if ( option == 'f' )
+            {
+                filename.assign(optarg);
+                if ( ! fs::exists(filename) )
+                {
+                    std::cerr << argv[0] << " : File not found - " << filename << std::endl;
+                    return bfc::file_error;
+                }
+                else
+                {
+                    ifile.open(filename);
+                    while ( std::getline(ifile,line) )
+                        buffer += line;
+                }
+            }
+            else
+            {
+                bfc::print_usage();
+                opt_flag = true;
+                break;
             }
         }
-        for ( auto i = optind;i < argc;i++)
-            std::cerr << argv[0] << " : Unrecognized option " << argv[i] << std::endl;
-        if ( optind < argc )
+        if ( optind < argc  && (! opt_flag ) )
         {
+            std::cerr << argv[0] << " : Unrecognized option" << std::endl;
             bfc::print_usage();
             return bfc::gen_error;
         }
