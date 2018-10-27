@@ -17,3 +17,6 @@ git clone https://github.com/canopeerus/bfc
 cd bfc
 make && make install
 ```
+
+## Bugs
+* Nested looping still doesn't work
