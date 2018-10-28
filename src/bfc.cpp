@@ -25,9 +25,10 @@ namespace bfc
     };
     void print_usage(void)
     {
-        std::cout << "Usage\n" \
-            << "\t-h        :\thelp\n" \
-            << "\t-f <file> :\tread from file\n";
+        std::cout << "bfc - A simple Brainfuck Interpreter" << std::endl \
+        << "Usage" << std::endl \
+        << "\t-h        :\thelp" << std::endl \
+        << "\t-f <file> :\tread from file\n";
     }
     void init(char progname[])
     {
@@ -132,13 +133,13 @@ int main(int argc,char **argv)
     std::string buffer,line;
     int option;
     std::ifstream ifile;
-    bfc::init(argv[0]);
     bool opt_flag = false;
     if ( argc == 1 )
     {
         /* if no args
          * read input from stdin
          */
+        bfc::init(argv[0]);
         while ( std::getline(std::cin,line) )
             buffer += line;
     }
@@ -146,7 +147,7 @@ int main(int argc,char **argv)
     {
         while ( (option = getopt(argc,argv,"hf:") ) != -1 )
         {
-            
+
             if ( option == 'h' )
             {
                     bfc::print_usage();
@@ -162,6 +163,7 @@ int main(int argc,char **argv)
                 }
                 else
                 {
+                    bfc::init(argv[0]);
                     ifile.open(filename);
                     while ( std::getline(ifile,line) )
                         buffer += line;
