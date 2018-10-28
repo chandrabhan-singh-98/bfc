@@ -11,7 +11,6 @@ namespace fs = std::filesystem;
 namespace bfc
 {
     std::string instruction_str;
-    std::vector<std::size_t> instruction_stack;
     std::vector<unsigned char> byte_vector;
     std::size_t instruction_ptr;
     std::size_t byte_ptr;
@@ -39,7 +38,6 @@ namespace bfc
         byte_vector.resize(vector_size);
         for ( auto i = 0;i < vector_size;i++)
             byte_vector.at(i) = 0;
-        instruction_stack.reserve(50);
         prg_name.assign(progname);
         return;
     }
@@ -57,55 +55,62 @@ namespace bfc
         };
         void parse(void)
         {
-            while ( instruction_str.at(instruction_ptr) != EOC )
+            for( ;instruction_str.at(instruction_ptr) != EOC; instruction_ptr++ )
             {
                 auto c = instruction_str.at(instruction_ptr);
                 switch (c)
                 {
                     case '+':
-                        ++byte_vector.at(byte_ptr);
-                        ++instruction_ptr;
+                        if ( ++byte_vector.at(byte_ptr) >= 127 )
+                            byte_vector.at(byte_ptr) = 127;
                         break;
                     case '-':
                         if ( --byte_vector.at(byte_ptr) <= 0 )
                             byte_vector.at(byte_ptr) = 0;
-                        ++instruction_ptr;
                         break;
                     case '>':
                         ++byte_ptr;
-                        ++instruction_ptr;
                         break;
                     case '<':
                         if ( --byte_ptr <= 0 )
                             byte_ptr = 0;
-                        ++instruction_ptr;
                         break;
                     case '.':
                         std::cout << byte_vector.at(byte_ptr);
-                        ++instruction_ptr;
                         break;
                     case ',':
                         byte_vector.at(byte_ptr) = std::cin.get();
-                        ++instruction_ptr;
                         break;
                     case '[':
-                        instruction_stack.push_back(instruction_ptr);
-                        if (  byte_vector.at(byte_ptr) != 0 )
-                            ++instruction_ptr;
-                        else
-                            instruction_ptr = instruction_str.find(instruction_ptr,']');
+                        if ( !(byte_vector.at(byte_ptr)) )
+                        {
+                            int bracket_c = 1;
+                            while ( bracket_c )
+                            {
+                                c = instruction_str.at(++instruction_ptr);
+                                if ( c == ']' )
+                                    --bracket_c;
+                                else if ( c == '[' )
+                                    ++bracket_c;
+                            }
+                        }
                         break;
                     case ']':
-                        if (  byte_vector.at(byte_ptr) == 0 )
-                            ++instruction_ptr;
-                        else
+                        if ( byte_vector.at(byte_ptr) )
                         {
-                            instruction_ptr = instruction_stack.back();
-                            instruction_stack.pop_back();
+                            int bracket_c = 1;
+                            while ( bracket_c > 0 )
+                            {
+                                c = instruction_str.at(--instruction_ptr);
+                                if ( c == '[' )
+                                    --bracket_c;
+                                else if ( c == ']' )
+                                    ++bracket_c;
+                            }
                         }
                         break;
                     default:
-                        ++instruction_ptr;
+                        continue;
                 }
             }
             return;
