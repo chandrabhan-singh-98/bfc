@@ -17,6 +17,7 @@ namespace bfc
     std::size_t byte_ptr;
     const int vector_size = 9999;
     std::string prg_name;
+    int match_count;
     enum error_codes
     {
         success,
@@ -34,6 +35,7 @@ namespace bfc
     {
         instruction_ptr = 0;
         byte_ptr = 0;
+        match_count = 0;
         byte_vector.resize(vector_size);
         for ( auto i = 0;i < vector_size;i++)
             byte_vector.at(i) = 0;
@@ -177,7 +179,9 @@ int main(int argc,char **argv)
                 break;
             }
         }
-        if ( optind < argc  &&  opt_flag  )
+        if ( option == '?' )
+            opt_flag = true;
+        if ( optind < argc  &&  (! opt_flag ) )
         {
             std::cerr << argv[0] << " : Unrecognized option" << std::endl;
             bfc::print_usage();
@@ -192,6 +196,5 @@ int main(int argc,char **argv)
         return bfc::parser::bracket_error;
     }
     bfc::parser::parse();
-
     return 0;
 }
