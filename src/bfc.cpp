@@ -61,12 +61,14 @@ namespace bfc
                 switch (c)
                 {
                     case '+':
-                        if ( ++byte_vector.at(byte_ptr) >= 127 )
-                            byte_vector.at(byte_ptr) = 127;
+                        //if ( ++byte_vector.at(byte_ptr) >= 127 )
+                        //    byte_vector.at(byte_ptr) = 127;
+                        ++byte_vector.at(byte_ptr);
                         break;
                     case '-':
-                        if ( --byte_vector.at(byte_ptr) <= 0 )
-                            byte_vector.at(byte_ptr) = 0;
+                        //if ( --byte_vector.at(byte_ptr) <= 0 )
+                        //    byte_vector.at(byte_ptr) = 0;
+                        --byte_vector.at(byte_ptr);
                         break;
                     case '>':
                         ++byte_ptr;
@@ -82,7 +84,7 @@ namespace bfc
                         byte_vector.at(byte_ptr) = std::cin.get();
                         break;
                     case '[':
-                        if ( !(byte_vector.at(byte_ptr)) )
+                        if ( byte_vector.at(byte_ptr) == 0 )
                         {
                             int bracket_c = 1;
                             while ( bracket_c )
@@ -96,7 +98,7 @@ namespace bfc
                         }
                         break;
                     case ']':
-                        if ( byte_vector.at(byte_ptr) )
+                        if ( byte_vector.at(byte_ptr) != 0 )
                         {
                             int bracket_c = 1;
                             while ( bracket_c > 0 )
@@ -109,8 +111,6 @@ namespace bfc
                             }
                         }
                         break;
-                    default:
-                        continue;
                 }
             }
             return;
@@ -118,15 +118,15 @@ namespace bfc
 
         int error_check(void)
         {
-            int l_count = 0,r_count = 0;
+            int l_count = 0;
             for ( auto j : instruction_str )
             {
                 if ( j == '[' )
                     ++l_count;
                 else if ( j == ']' )
-                    ++r_count;
+                    --l_count;
             }
-            if ( l_count != r_count )
+            if ( l_count )
                 return bracket_error;
             else
                 return p_success;
