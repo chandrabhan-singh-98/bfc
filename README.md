@@ -33,3 +33,5 @@ Unix-like systems this is done by pressing CTRL-D to terminate input.
 ## Bugs
 ~~* Nested looping still doesn't work~~
 
+## License
+[LICENSE](LICENSE)
