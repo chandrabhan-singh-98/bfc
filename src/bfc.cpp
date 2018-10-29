@@ -4,10 +4,23 @@
 #include <unistd.h>
 #include <filesystem>
 #include <fstream>
+
+/*
+ * EOC is a symbol appended
+ * to the end of the code buffer
+ */
+
 #define EOC '$'
 
+/*
+ * alias std::filesystem for fewer keystrokes
+ */
 namespace fs = std::filesystem;
 
+/*
+ * bfc namespace to hold soms global
+ * variables and functions
+ */
 namespace bfc
 {
     std::string instruction_str;
@@ -61,13 +74,9 @@ namespace bfc
                 switch (c)
                 {
                     case '+':
-                        //if ( ++byte_vector.at(byte_ptr) >= 127 )
-                        //    byte_vector.at(byte_ptr) = 127;
                         ++byte_vector.at(byte_ptr);
                         break;
                     case '-':
-                        //if ( --byte_vector.at(byte_ptr) <= 0 )
-                        //    byte_vector.at(byte_ptr) = 0;
                         --byte_vector.at(byte_ptr);
                         break;
                     case '>':
@@ -152,6 +161,9 @@ int main(int argc,char **argv)
     }
     else
     {
+        /*
+         * parse command line arguments
+         */
         while ( (option = getopt(argc,argv,"hf:") ) != -1 )
         {
 
