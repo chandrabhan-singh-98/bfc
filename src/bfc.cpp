@@ -41,13 +41,18 @@ namespace bfc
         std::cout << "bfc - A simple Brainfuck Interpreter" << std::endl \
         << "Usage" << std::endl \
         << "\t-h        :\thelp" << std::endl \
-        << "\t-f <file> :\tread from file\n";
+        << "\t-f <file> :\tread from file" << std::endl \
+        << "\t-c <code> :\tfeed code directly as input\n";
     }
+
+    /*
+     * init function to initialize byte vector
+     * byte pointer,instruction pointer
+     */
     void init(char progname[])
     {
         instruction_ptr = 0;
         byte_ptr = 0;
-        match_count = 0;
         byte_vector.resize(vector_size);
         for ( auto i = 0;i < vector_size;i++)
             byte_vector.at(i) = 0;
@@ -164,12 +169,13 @@ int main(int argc,char **argv)
         /*
          * parse command line arguments
          */
-        while ( (option = getopt(argc,argv,"hf:") ) != -1 )
+        while ( (option = getopt(argc,argv,"hf:c:") ) != -1 )
         {
 
             if ( option == 'h' )
             {
                     bfc::print_usage();
+                    opt_flag = true;
                     break;
             }
             else if ( option == 'f' )
@@ -187,6 +193,12 @@ int main(int argc,char **argv)
                     while ( std::getline(ifile,line) )
                         buffer += line;
                 }
+                break;
+            }
+            else if ( option == 'c' )
+            {
+                buffer.assign(optarg);
+                bfc::init(argv[0]);
                 break;
             }
             else
@@ -209,7 +221,7 @@ int main(int argc,char **argv)
     bfc::set_input_string(buffer);
     if ( bfc::parser::error_check() == bfc::parser::bracket_error )
     {
-        std::cerr << argv[0] << ": Syntax error '['/']' " << std::endl;
+        std::cerr << argv[0] << ": Error - Mismatch brackets " << std::endl;
         return bfc::parser::bracket_error;
     }
     bfc::parser::parse();

@@ -23,6 +23,7 @@ make && make install
 Usage
     -f <file>   :   Read input from file
     -h          :   Show help/usage guide
+    -c <code>   :   Feed Brainfuck code directly as input
 ```
 Calling `bfc` with no arguments will lead to reading input directly
 from STDIN. When providing input to `bfc` from STDIN you'll have to
@@ -30,4 +31,5 @@ manually signal EOF to terminate the input and begin execution. In
 Unix-like systems this is done by pressing CTRL-D to terminate input.
 
 ## Bugs
-* Nested looping still doesn't work
+~~* Nested looping still doesn't work~~
+
