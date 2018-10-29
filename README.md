@@ -22,8 +22,8 @@ make && make install
 ```
 Usage
     -f <file>   :   Read input from file
-    -h          :   Show help/usage guide
     -c <code>   :   Feed Brainfuck code directly as input
+    -h          :   Show help/usage guide
 ```
 Calling `bfc` with no arguments will lead to reading input directly
 from STDIN. When providing input to `bfc` from STDIN you'll have to
