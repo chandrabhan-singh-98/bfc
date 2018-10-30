@@ -2,7 +2,6 @@
 #include <vector>
 #include <getopt.h>
 #include <unistd.h>
-#include <filesystem>
 #include <fstream>
 
 /*
@@ -15,7 +14,13 @@
 /*
  * alias std::filesystem for fewer keystrokes
  */
-namespace fs = std::filesystem;
+#ifndef __cpp_lib_filesystem
+    #include <experimental/filesystem>
+    namespace fs = std::experimental::filesystem;
+#else
+    #include <filesystem>
+    namespace fs = std::filesystem;
+#endif
 
 /*
  * bfc namespace to hold soms global
