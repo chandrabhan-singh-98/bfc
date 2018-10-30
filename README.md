@@ -31,7 +31,7 @@ manually signal EOF to terminate the input and begin execution. In
 Unix-like systems this is done by pressing CTRL-D to terminate input.
 
 ## Bugs
-~~* Nested looping still doesn't work~~
+You tell me.
 
 ## License
 [LICENSE](LICENSE)
