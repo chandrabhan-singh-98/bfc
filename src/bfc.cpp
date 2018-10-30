@@ -12,7 +12,7 @@
 #define EOC '$'
 
 /*
- * alias std::filesystem for fewer keystrokes
+ * check for std::filesystem
  */
 #ifndef __cpp_lib_filesystem
     #include <experimental/filesystem>
@@ -45,9 +45,9 @@ namespace bfc
     {
         std::cout << "bfc - A simple Brainfuck Interpreter" << std::endl \
         << "Usage" << std::endl \
-        << "\t-h        :\thelp" << std::endl \
-        << "\t-f <file> :\tread from file" << std::endl \
-        << "\t-c <code> :\tfeed code directly as input\n";
+        << "\tbfc -h        :\thelp" << std::endl \
+        << "\tbfc <file>    :\tread from file" << std::endl \
+        << "\tbfc -c <code> :\tfeed code directly as input\n";
     }
 
     /*
@@ -174,52 +174,63 @@ int main(int argc,char **argv)
         /*
          * parse command line arguments
          */
-        while ( (option = getopt(argc,argv,"hf:c:") ) != -1 )
+        if ( fs::exists(argv[1]) )
         {
+            filename.assign(argv[1]);
+            bfc::init(argv[0]);
+            ifile.open(filename);
+            while ( std::getline(ifile,line) )
+                buffer += line;
+        }
+        else
+        {
+            while ( (option = getopt(argc,argv,"hc:") ) != -1 )
+            {
 
-            if ( option == 'h' )
-            {
-                    bfc::print_usage();
-                    opt_flag = true;
-                    break;
-            }
-            else if ( option == 'f' )
-            {
-                filename.assign(optarg);
-                if ( ! fs::exists(filename) )
+                if ( option == 'h' )
                 {
-                    std::cerr << argv[0] << " : File not found - " << filename << std::endl;
-                    return bfc::file_error;
+                        bfc::print_usage();
+                        opt_flag = true;
+                        break;
+                }
+                else if ( option == 'f' )
+                {
+                    filename.assign(optarg);
+                    if ( ! fs::exists(filename) )
+                    {
+                        std::cerr << argv[0] << " : File not found - " << filename << std::endl;
+                        return bfc::file_error;
+                    }
+                    else
+                    {
+                        bfc::init(argv[0]);
+                        ifile.open(filename);
+                        while ( std::getline(ifile,line) )
+                            buffer += line;
+                    }
+                    break;
+                }
+                else if ( option == 'c' )
+                {
+                    buffer.assign(optarg);
+                    bfc::init(argv[0]);
+                    break;
                 }
                 else
                 {
-                    bfc::init(argv[0]);
-                    ifile.open(filename);
-                    while ( std::getline(ifile,line) )
-                        buffer += line;
+                    bfc::print_usage();
+                    opt_flag = true;
+                    break;
                 }
-                break;
             }
-            else if ( option == 'c' )
-            {
-                buffer.assign(optarg);
-                bfc::init(argv[0]);
-                break;
-            }
-            else
-            {
-                bfc::print_usage();
+            if ( option == '?' )
                 opt_flag = true;
-                break;
+            if ( optind < argc  &&  (! opt_flag ) )
+            {
+                std::cerr << argv[0] << " : Unrecognized option" << std::endl;
+                bfc::print_usage();
+                return bfc::gen_error;
             }
-        }
-        if ( option == '?' )
-            opt_flag = true;
-        if ( optind < argc  &&  (! opt_flag ) )
-        {
-            std::cerr << argv[0] << " : Unrecognized option" << std::endl;
-            bfc::print_usage();
-            return bfc::gen_error;
         }
     }
     buffer += EOC;
